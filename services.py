@@ -1,0 +1,11 @@
+COMMON_PORTS={
+    21:"ftp",
+    22:"ssh",
+    23:"telnet",
+    25:"smtp",
+    53:"DNS",
+    80:"http",
+    110:"POP3",
+    143:"IMAP",
+    443:"https",
+}
