@@ -16,3 +16,6 @@ class HostResolutionError(Exception):
         super().__init__(
             f"Error! Unable to resolve hostname: {hostname}."
         )
+
+class InvalidOption(Exception):
+    def __init__(self): super().__init__("Invalid Option")
