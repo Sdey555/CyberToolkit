@@ -1,5 +1,4 @@
 /.venv
 /pycache
-readme.md
 ui.py
 /core/pycache
