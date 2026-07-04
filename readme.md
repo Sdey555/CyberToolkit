@@ -59,7 +59,7 @@ python main.py
 ### Example Output
 
 ```bash
-Enter Hostname or IP: 
+Enter Hostname or IP:
 Search by
 1. Range of ports
 2. Common ports
@@ -67,10 +67,10 @@ choose: 2
 
 Scan complete!
 
-Port    Service     Status
--------------------------------------
-80      http        OPEN
-443     https       OPEN
+Port    Service     Status          Banner
+---------------------------------------------------
+80      http        OPEN            gws
+443     https       OPEN            None
 ```
 ---
 
