@@ -20,6 +20,8 @@ This project is being developed incrementally, with each module focusing on a re
 - Custom exception handling
 - Object-oriented design
 - Modular project structure
+- Generic TCP Banner Grabbing
+- HTTP server Banner Detection
 
 ---
 
@@ -53,6 +55,8 @@ python main.py
 ```
 
 ---
+
+### Example Output
 
 ```bash
 Enter Hostname or IP: 
