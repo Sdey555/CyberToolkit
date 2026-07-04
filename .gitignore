@@ -1,4 +1,4 @@
 /.venv
-/pycache
+/__pycache__
 ui.py
-/core/pycache
+/core/__pycache__

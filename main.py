@@ -1,21 +1,11 @@
 from core.scanner import PortScanner
+from cli_input import user_input
+from cli_output import display_scan_result
 
-port_scanner = PortScanner(input("Enter Hostname or IP: "))
+host,start,end,opt = user_input()
+port_scanner = PortScanner(host)
 
-def display_scan_result(port_list):
-    print("\nScan complete!\n")
-    
-    if not port_list:
-        print("No port is open!")
-    else:
-        print(f"{'Port':<8}{'Service':<12}{'Status'}")
-        print("-------------------------------------")
-        for port_info in port_list:
-            print(f"{port_info.port:<8}"
-                f"{port_info.service:<12}"
-                f"{port_info.status}")
-
-result = port_scanner.scan()
+result = port_scanner.scan(start,end,opt)
 if result:
     display_scan_result(result)
 else:

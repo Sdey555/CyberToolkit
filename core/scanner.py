@@ -9,6 +9,7 @@ class PortInfo:
     port: int
     service: str
     status: str = "CLOSED"
+    banner: str | None = None
 
 class PortScanner:
     def __init__(self,hostname,timeout=1,max_workers=100):
@@ -24,6 +25,9 @@ class PortScanner:
             raise exceptions.HostResolutionError(self.hostname)
         else:
             return ip
+        
+    def grab_banner(self,ip,port):
+        pass
 
     def scan_port(self,ip, port):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as skt:
@@ -35,10 +39,8 @@ class PortScanner:
     def scan_ports(self,ip,ports):
         self.open_ports.clear()
         future_to_port = {}
-        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:  
-            for port in ports:
-                future = executor.submit(self.scan_port,ip,port)
-                future_to_port[future] = port
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            future_to_port = {executor.submit(self.scan_port,ip,port): port for port in ports}
         for future in as_completed(future_to_port):
             port = future_to_port[future]
             is_open = future.result()
@@ -49,19 +51,16 @@ class PortScanner:
         self.open_ports.sort(key=lambda port: port.port)
         return self.open_ports
     
-    def scan_range(self, target_ip):
-        start_port = int(input("Enter start port: "))
-        end_port = int(input("Enter end port: "))
+    def scan_range(self, target_ip,start_port,end_port):
         if start_port > end_port: raise exceptions.ErrorPortOrdering(start_port,end_port)
         ports=range(start_port,end_port+1)
         self.open_ports=self.scan_ports(target_ip,ports)
 
-    def scan(self):
+    def scan(self,start_port,end_port,option):
         try:
             target_ip = self.resolve_hostname()
-            option = int(input("Search by\n1. Range of ports\n2. Common ports\nchoose: "))
             if option == 1:
-                self.scan_range(target_ip)          
+                self.scan_range(target_ip,start_port,end_port)          
             elif option == 2:
                 self.open_ports=self.scan_ports(target_ip,COMMON_PORTS.keys())
             else:
