@@ -20,59 +20,76 @@ class PortScanner:
 
     def resolve_hostname(self):
         try:
-            ip = socket.gethostbyname(self.hostname)
+            return socket.gethostbyname(self.hostname)
         except socket.gaierror:
             raise exceptions.HostResolutionError(self.hostname)
-        else:
-            return ip
         
-    def grab_banner(self,ip,port):
-        pass
-
+    def grab_banner(self,ip,port_info):
+        with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as sock:
+            sock.settimeout(self.timeout)
+            try:
+                sock.connect((ip,port_info.port))
+                if port_info.service=="http":
+                    return self.grab_http_banner(sock)
+                else:
+                    banner = sock.recv(1024)
+                    return banner.decode(errors="ignore").strip()
+            except (socket.timeout,
+               ConnectionResetError,
+               OSError):
+                return None
+            
+    def grab_http_banner(self,sock):
+        request = f"GET / HTTP/1.1\r\nHost: {self.hostname}\r\nConnection: close\r\n\r\n"
+        sock.sendall(request.encode("utf-8"))
+        data = sock.recv(1024)
+        data_text = data.decode(errors="ignore")
+        lines = data_text.split("\r\n")
+        for line in lines:
+            if line.lower().startswith("server:"):
+                banner = line.split(":",1)[1].strip()
+                return banner
+        return None
+    
     def scan_port(self,ip, port):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as skt:
             skt.settimeout(self.timeout)
         
             result = skt.connect_ex((ip,port))
-            return result == 0
+            if result==0:
+                return PortInfo(port=port,
+                                service=COMMON_PORTS.get(port,"unknown"),
+                                status="OPEN")
+            else:
+                return None
 
     def scan_ports(self,ip,ports):
         self.open_ports.clear()
-        future_to_port = {}
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            future_to_port = {executor.submit(self.scan_port,ip,port): port for port in ports}
-        for future in as_completed(future_to_port):
-            port = future_to_port[future]
-            is_open = future.result()
-            if is_open:
-                self.open_ports.append(PortInfo(port=port,
-                                                service=COMMON_PORTS.get(port,"unknown"),
-                                                status="OPEN"))
-        self.open_ports.sort(key=lambda port: port.port)
+            futures = {executor.submit(self.scan_port,ip,port) for port in ports}
+        for future in as_completed(futures):
+            port_info = future.result()
+            if port_info:
+                port_info.banner =  self.grab_banner(ip,port_info) 
+                self.open_ports.append(port_info)
+        self.open_ports.sort(key=lambda port_info: port_info.port)
         return self.open_ports
     
-    def scan_range(self, target_ip,start_port,end_port):
+    def scan_range(self,target_ip,start_port,end_port):
         if start_port > end_port: raise exceptions.ErrorPortOrdering(start_port,end_port)
         ports=range(start_port,end_port+1)
-        self.open_ports=self.scan_ports(target_ip,ports)
+        return self.scan_ports(target_ip,ports)
 
     def scan(self,start_port,end_port,option):
         try:
             target_ip = self.resolve_hostname()
             if option == 1:
-                self.scan_range(target_ip,start_port,end_port)          
+                return self.scan_range(target_ip,start_port,end_port)          
             elif option == 2:
-                self.open_ports=self.scan_ports(target_ip,COMMON_PORTS.keys())
+                return self.scan_ports(target_ip,COMMON_PORTS.keys())
             else:
                 raise exceptions.InvalidOption
-        except exceptions.HostResolutionError as e:
+        except (exceptions.HostResolutionError,
+                exceptions.InvalidOption,
+                exceptions.ErrorPortOrdering) as e:
             print(e)
-            return None
-        except exceptions.InvalidOption as e:
-            print(e)
-            return None
-        except exceptions.ErrorPortOrdering as e:
-            print(e) 
-            return None
-        else:
-            return self.open_ports
