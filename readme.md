@@ -34,13 +34,23 @@ CyberToolkit/
 │
 ├── core/
 │   ├── scanner.py
+│   ├── banner.py
+│   ├── models.py
 │   ├── services.py
 │   └── exceptions.py
+│
+├── cli/
+│   ├── input.py
+│   └── output.py
+│
+├── assests/
+│   └── output.png
 │
 ├── main.py
 ├── README.md
 └── .gitignore
 ```
+
 ## 🚀 Getting Started
 
 ### Clone the repository

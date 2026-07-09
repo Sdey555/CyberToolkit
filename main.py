@@ -1,6 +1,6 @@
 from core.scanner import PortScanner
-from cli_input import user_input
-from cli_output import display_scan_result
+from cli.input import user_input
+from cli.output import display_scan_result
 
 host,start,end,opt = user_input()
 port_scanner = PortScanner(host)
