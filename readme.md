@@ -60,9 +60,8 @@ python main.py
 
 ### Example Output
 
-```bash
-![Terminal](image.png)
-```
+![Terminal](assests/output.png)
+
 ---
 
 ## 🛠️ Technologies Used
