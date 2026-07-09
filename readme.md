@@ -22,6 +22,8 @@ This project is being developed incrementally, with each module focusing on a re
 - Modular project structure
 - Generic TCP Banner Grabbing
 - HTTP server Banner Detection
+- Port Latency Measurement
+- Scan Statistics
 
 ---
 
@@ -44,7 +46,7 @@ CyberToolkit/
 ### Clone the repository
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/CyberToolkit.git
+git clone https://github.com/Sdey555/CyberToolkit.git
 cd CyberToolkit
 ```
 
@@ -59,18 +61,7 @@ python main.py
 ### Example Output
 
 ```bash
-Enter Hostname or IP:
-Search by
-1. Range of ports
-2. Common ports
-choose: 2
-
-Scan complete!
-
-Port    Service     Status          Banner
----------------------------------------------------
-80      http        OPEN            gws
-443     https       OPEN            None
+![Terminal](image.png)
 ```
 ---
 
