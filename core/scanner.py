@@ -87,7 +87,7 @@ class PortScanner:
         self.scan_stats.port_count=len(ports)
         start_time = time.perf_counter()
         self.open_ports.clear()
-        self.scan_stats = self.hostname
+        self.scan_stats.target = self.hostname
         self.scan_stats.open_port_count=0
         self.scan_stats.port_count=0
         self.scan_stats.total_time=0.0
