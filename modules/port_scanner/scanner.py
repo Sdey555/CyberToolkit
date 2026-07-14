@@ -44,9 +44,9 @@ class PortScanner:
                 return None
 
     def scan_ports(self,ip:str,ports:Iterable[int]) -> list[models.PortInfo]:
+        self.reset()
         self.scan_stats.port_count=len(ports)
         start_time = time.perf_counter()
-        self.reset()
         
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             futures = {executor.submit(self.scan_port,ip,port) for port in ports}
