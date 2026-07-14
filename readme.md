@@ -1,3 +1,7 @@
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Version](https://img.shields.io/badge/version-v1.3.0-brightgreen)
+![Status](https://img.shields.io/badge/status-Active-success)
+![Purpose](https://img.shields.io/badge/Purpose-Educational-orange)
 # 🛡️ CyberToolkit
 
 CyberToolkit is a modular cybersecurity toolkit written in Python. The project is built to learn networking, cybersecurity, and software engineering by implementing practical security tools from scratch.
