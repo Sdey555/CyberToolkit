@@ -1,5 +1,5 @@
 import socket
-import core.models as models
+import modules.port_scanner.models as models
 
 class BannerGrabber:
     def __init__(self,hostname:str,timeout:float):

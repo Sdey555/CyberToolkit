@@ -1,4 +1,4 @@
-def user_input():
+def port_scanner_input():
     host = input("Enter Hostname or IP: ")
     option = int(input("Search by\n1. Range of ports\n2. Common ports\nchoose: "))
     if option == 1:
@@ -7,3 +7,7 @@ def user_input():
         return host,start_port,end_port,option
     elif option == 2:
         return host,None,None,option
+    
+def dns_lookup_input():
+    host = input("Enter hostname or IP: ")
+    return host

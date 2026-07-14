@@ -1,11 +1,11 @@
 import socket
-from core import exceptions
-from core.services import COMMON_PORTS
-import core.models as models
+from modules.port_scanner import exceptions
+from modules.port_scanner.services import COMMON_PORTS
+import modules.port_scanner.models as models
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 from collections.abc import Iterable
-from core.banner import BannerGrabber
+from modules.port_scanner.banner import BannerGrabber
 
 class PortScanner:
     def __init__(self,hostname:str,timeout:float=1,max_workers:int=100):
@@ -68,17 +68,12 @@ class PortScanner:
         return self.scan_ports(target_ip,ports)
 
     def scan(self,start_port,end_port,option) -> models.ScanResult | None:
-        try:
-            self.scan_stats.resolved_ip = target_ip = self.resolve_hostname()
-            if option == 1:
-                return models.ScanResult(ports_info=self.scan_range(target_ip,start_port,end_port),
-                                          stats=self.scan_stats)        
-            elif option == 2:
-                return models.ScanResult(ports_info=self.scan_ports(target_ip,COMMON_PORTS.keys()),
-                                          stats=self.scan_stats)
-            else:
-                raise exceptions.InvalidOption
-        except (exceptions.HostResolutionError,
-                exceptions.InvalidOption,
-                exceptions.ErrorPortOrdering) as e:
-            print(e)
+        self.scan_stats.resolved_ip = target_ip = self.resolve_hostname()
+        if option == 1:
+            return models.ScanResult(ports_info=self.scan_range(target_ip,start_port,end_port),
+                                        stats=self.scan_stats)        
+        elif option == 2:
+            return models.ScanResult(ports_info=self.scan_ports(target_ip,COMMON_PORTS.keys()),
+                                        stats=self.scan_stats)
+        else:
+            raise exceptions.InvalidOption
