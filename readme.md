@@ -111,15 +111,15 @@ python main.py
 
 ### Main Menu
 
-![Main Menu](assets/menu.png)
+![Main Menu](assests/menu.png)
 
 ### Port Scanner
 
-![Port Scanner](assets/port_scanner.png)
+![Port Scanner](assests/port_scanner.png)
 
 ### DNS Lookup
 
-![DNS Lookup](assets/dns_lookup.png)
+![DNS Lookup](assests/dns_lookup.png)
 
 ---
 
